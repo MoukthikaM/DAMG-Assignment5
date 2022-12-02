@@ -1,6 +1,6 @@
 # DAMG-Assignment5:PREDICTING CUSTOMER SPEND - REGRESSION USING SNOWFLAKE:
 
-Codelabs Document link : 
+Codelabs Document link : https://codelabs-preview.appspot.com/?file_id=100uwraioKrKJntZWNlOcgEOgk9j_7RplUaPgZbZamRk#3 
 
 ## REQUIREMENTS:
 
@@ -31,4 +31,26 @@ Optional: Docker runtime environment such as Docker Desktop will be used for run
 
 	 	streamlit run streamlit.py
 
+   Link for Streamlit: https://moukthikam-damg-assignment5-streamlit-7r83od.streamlit.app 
+
 4. Run airflow using astro cli :  
+
+## CONTRIBUTIONS:
+
+1. Moukthika Manapati :
+
+- Airflow
+
+- Docker
+
+- Model build and train
+
+2. Adhrushta Arashanapalli :
+
+- Data Preprocessing
+
+- ELT pipeline
+
+- functions for Bulk load and incremental ingest
+
+- Documentation 
