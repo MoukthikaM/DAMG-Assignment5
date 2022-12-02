@@ -39,9 +39,11 @@ Optional: Docker runtime environment such as Docker Desktop will be used for run
 
 1. Moukthika Manapati :
 
-- Airflow
+- Airflow, Astro
 
 - Docker
+
+- Streamlit
 
 - Model build and train
 
