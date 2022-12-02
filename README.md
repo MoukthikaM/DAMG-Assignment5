@@ -43,7 +43,9 @@ Optional: Docker runtime environment such as Docker Desktop will be used for run
 		astro dev start
       		astro dev stop
    
-   - If you make any changes, we can run astro dev restart.
+- If you make any changes, we can run: 
+		
+		astro dev restart.
 
 ## CONTRIBUTIONS:
 
