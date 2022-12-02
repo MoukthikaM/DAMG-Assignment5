@@ -41,7 +41,8 @@ Optional: Docker runtime environment such as Docker Desktop will be used for run
 - You can initialise the astro using astro dev init but as the environemnt and folders are already set we can run the below commands to run the airflow:
      		
 		astro dev start
-      		astro dev stop
+      		
+		astro dev stop
    
 - If you make any changes, we can run: 
 		
