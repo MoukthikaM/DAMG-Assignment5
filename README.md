@@ -32,14 +32,17 @@ Optional: Docker runtime environment such as Docker Desktop will be used for run
 
 	 	streamlit run streamlit.py
 
-   - This is the link for the streamlit hoseted in streamlit cloud.
-   Link for Streamlit: https://moukthikam-damg-assignment5-streamlit-7r83od.streamlit.app 
+- This is the link for the streamlit hoseted in streamlit cloud. Link for Streamlit: https://moukthikam-damg-assignment5-streamlit-7r83od.streamlit.app 
 
 4. Run airflow using astro cli :  
-   - Install Astro CLI using https://docs.astronomer.io/astro/cli/install-cli
-   - You can initialise the astro using astro dev init but as the environemnt and folders are already set we can run the below commands to run the airflow:
-      astro dev start
-      astro dev stop
+  
+- Install Astro CLI using https://docs.astronomer.io/astro/cli/install-cli
+  
+- You can initialise the astro using astro dev init but as the environemnt and folders are already set we can run the below commands to run the airflow:
+     		
+		astro dev start
+      		astro dev stop
+   
    - If you make any changes, we can run astro dev restart.
 
 ## CONTRIBUTIONS:
