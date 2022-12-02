@@ -49,6 +49,8 @@ Optional: Docker runtime environment such as Docker Desktop will be used for run
 		
 		astro dev restart.
 
+  - Link for Airflow Instance : http://ec2-35-172-118-249.compute-1.amazonaws.com/dags/customerspend_incremental_setup_taskflow/graph   
+
 ## CONTRIBUTIONS:
 
 1. Moukthika Manapati :
