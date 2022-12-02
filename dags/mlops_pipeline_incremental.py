@@ -1,55 +1,65 @@
-def incremental_elt(session, 
-                    state_dict:dict, 
-                    files_to_ingest:list, 
-                    download_base_url,
-                    use_prestaged=False) -> str:
-
-    from datetime import datetime
-
-    load_stage_name=state_dict['load_stage_name']
-    load_table_name=state_dict['load_table_name']
-    trips_table_name=state_dict['trips_table_name']
+def inc_extract_to_stage(session, schema1_files_to_download: list,schema2_download_files: list, download_base_url: str, load_stage_name:str):
     
-    if use_prestaged:
-        print("Skipping extract.  Using provided bucket for pre-staged files.")
-        
-        schema1_download_files = list()
-        schema2_download_files = list()
-        schema2_start_date = datetime.strptime('202201', "%Y%m")
+    import requests
+    from zipfile import ZipFile
+    from io import BytesIO
+    import os
 
-        for file_name in files_to_ingest:
-            file_start_date = datetime.strptime(file_name.split("-")[0], "%Y%m")
-            if file_start_date < schema2_start_date:
-                schema1_download_files.append(file_name)
-            else:
-                schema2_download_files.append(file_name)
-        
-        
-        load_stage_names = {'schema1':load_stage_name+'/schema1/', 'schema2':load_stage_name+'/schema2/'}
-        files_to_load = {'schema1': schema1_download_files, 'schema2': schema2_download_files}
-    else:
-        print("Extracting files from public location.")
-        load_stage_names = extract_to_stage(session=session, 
-                                                                    files_to_download=files_to_ingest, 
-                                                                    download_base_url=download_base_url, 
-                                                                    load_stage_name=load_stage_name)
-        
-        files_to_load = extract_to_stage(session=session, 
-                                                                    files_to_download=files_to_ingest, 
-                                                                    download_base_url=download_base_url, 
-                                                                    load_stage_name=load_stage_name)
-        
-        # files_to_load['schema1']=[file+'.gz' for file in files_to_load['schema1']]
-        # files_to_load['schema2']=[file+'.gz' for file in files_to_load['schema2']]
+    schema1_load_stage = load_stage_name+'/schema1/'
+    schema1_files_to_load = list()
 
+    for file_name in schema1_files_to_download:
+        url1 = download_base_url+file_name
+        print('Downloading and unzipping: '+url1)
 
-    print("Loading files to raw.")
-    stage_table_names = load(session=session, 
-                                              files_to_load=files_to_load, 
-                                              load_stage_names=load_stage_names, 
-                                              load_table_name=load_table_name)    
+        r = requests.get(url1)
+        file = ZipFile(BytesIO(r.content))
+        csv_file_name=file.namelist()[0]
+        schema1_files_to_load.append(csv_file_name)
+        file.extract(csv_file_name)
+        file.close()
+        
+    schema2_load_stage = load_stage_name+'/schema2/'
+    schema2_files_to_load = list()
     
-    print("Transforming records to customers table.")
-    trips_table_name = transform(session=session, 
-                                       trips_table_name=trips_table_name)
-    return trips_table_name
+    for file_name in schema2_download_files:
+
+        url2 = download_base_url+file_name
+
+        print('Downloading and unzipping: '+url2)
+        r = requests.get(url2)
+        file = ZipFile(BytesIO(r.content))
+        csv_file_name=file.namelist()[0]
+        schema2_files_to_load.append(csv_file_name)
+        file.extract(csv_file_name)
+        file.close()
+        
+    load_stage_names = {'schema1' : schema1_load_stage, 'schema2' : schema2_load_stage}
+    files_to_load = {'schema1': schema1_files_to_load, 'schema2': schema2_files_to_load}
+
+    return load_stage_names, files_to_load
+
+def load(session, files_to_load:dict, load_stage_names:dict, load_table_name:str):
+    import pandas as pd
+    user_details_1 = pd.read_csv(files_to_load['schema1'][0])
+    user_details_2 = pd.read_csv(files_to_load['schema2'][0])
+    user_activity_1 = pd.read_csv(files_to_load['schema1'][1])
+    user_activity_2 = pd.read_csv(files_to_load['schema2'][1])
+    
+    # Create a pandas data frame from the Snowflake table
+    UD_df = session.table('user_details_new').toPandas()
+    user_details=pd.concat([UD_df,user_details_2])
+    print(f"'UD_df' local dataframe created. Number of records: {len(UD_df)} ")
+    snowdf_activity = session.createDataFrame(user_details)
+    snowdf_activity.write.mode("overwrite").saveAsTable("user_details_new") 
+    session.table("user_details_new").limit(5).show(5)
+    
+    # Create a pandas data frame from the Snowflake table
+    UA_df = session.table('user_activity_new').toPandas()
+    user_activity=pd.concat([UA_df,user_activity_2])
+    print(f"'UA_df' local dataframe created. Number of records: {len(UA_df)} ")
+    snowdf_activity = session.createDataFrame(user_activity)
+    snowdf_activity.write.mode("overwrite").saveAsTable("user_activity_new") 
+    session.table("user_activity_new").limit(5).show(5)
+
+    return load_table_name
