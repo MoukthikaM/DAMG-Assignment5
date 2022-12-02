@@ -1,0 +1,2 @@
+{"user": "moukthika97", "account": "qmb30657.us-east-1", "role": "ACCOUNTADMIN", "database": "CUSTOMERS", "schema": "PUBLIC","password":"Mouk@1997" ,"warehouse": "XSMALL_WH","compute_parameters": {"default_warehouse": "XSMALL_WH", "task_warehouse": "XSMALL_WH", "load_warehouse": "LARGE_WH", "fe_warehouse": "XXLARGE_WH", "train_warehouse": "XXLARGE_WH", "train_warehouse_sow": "XXLARGE_SNOWPARKOPT_WH"}, "load_stage_name": "LOAD_STAGE", "download_base_url": "https://s3.amazonaws.com/damgbucket/data/", "trips_table_name": "ecommerce", "load_table_name": "RAW_"
+}
