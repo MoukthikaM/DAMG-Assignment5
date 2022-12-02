@@ -51,6 +51,7 @@ Optional: Docker runtime environment such as Docker Desktop will be used for run
 
   - Link for Airflow Instance : http://ec2-35-172-118-249.compute-1.amazonaws.com/dags/customerspend_incremental_setup_taskflow/graph   
 
+  - Credentials for airflow : username -admin , password -admin
 ## CONTRIBUTIONS:
 
 1. Moukthika Manapati :
